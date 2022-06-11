@@ -1,10 +1,20 @@
+const port = process.env.PORT || 3000
+const user = process.env.MYSQL_USER || "root"
+const pass = process.env.MYSQL_PASS || ""
+const dataBaseName = process.env.NAME_DATABASE_MYSQL || 'company_db'
+
+
 var createError = require('http-errors');
-var express = require('express');
+
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-const port = process.env.PORT || 3000
+var cors = require('cors');
 
+
+const { Sequelize } = require('sequelize');
+
+var express = require('express');
 var app = express();
 
 // view engine setup
@@ -13,6 +23,7 @@ app.set('view engine', 'ejs');
 
 app.use(logger('dev'));
 app.use(express.json());
+app.use(cors())
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
@@ -42,5 +53,21 @@ app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
 
+
+async function Database (){
+const sequelize = new Sequelize(dataBaseName, user, pass,{
+  host: 'localhost',
+  dialect: 'mysql' 
+})
+
+try {
+ await sequelize.authenticate()  
+  console.log("Database is Connected")
+} catch (error) {
+  console.log("error Database " + error)
+}
+
+}
+Database()
 
 module.exports = app;
