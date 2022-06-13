@@ -1,0 +1,1 @@
+alert("JS is ok Add your dist build in this folder")
